@@ -256,6 +256,11 @@ function main () {
         exit 1
     fi
 
+    if hasFlag "v"; then echo "$SCRIPT_NAME> $APP_VERSION"; exit 0; fi
+    if hasFlag "install"; then add_script_to_path; fi
+    if hasFlag "update"; then check_for_updates "false"; fi
+    if hasFlag "fu"; then check_for_updates "true"; fi # force
+
     if hasFlag "b"; then 
         echo "> Gerando backup..."
         exportar_backup
