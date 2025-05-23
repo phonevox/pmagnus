@@ -31,6 +31,11 @@ add_flag "b" "backup" "Faz um backup do seu MagnusBilling" bool
 add_flag "i" "import" "Importa um arquivo de backup do MagnusBilling para o seu servidor atual" string
 add_flag "y" "accept" "Assume 'sim' para todas interações e roda de forma não-interativa" bool
 
+# Version flags
+add_flag "v" "version" "Show app version and exit" bool
+add_flag "upd:HIDDEN" "update" "Update this script to the newest version" bool
+add_flag "fu:HIDDEN" "force-update" "Force the update even if its in the same version" bool
+
 # === GENERATING ===
 set_description "Esse script é utilizado tanto para fazer um backup do MagnusBilling, quanto para importar um arquivo de backup."
 set_usage "bash $FULL_SCRIPT_PATH [flags]"
