@@ -30,6 +30,7 @@ source "$CURRDIR/lib/uzful.sh"
 add_flag "b" "backup" "Faz um backup do seu MagnusBilling" bool
 add_flag "i" "import" "Importa um arquivo de backup do MagnusBilling para o seu servidor atual" string
 add_flag "y" "accept" "Assume 'sim' para todas interações e roda de forma não-interativa" bool
+add_flag "mbinstall:HIDDEN" "magnus-install" "Instala o MagnusBilling no servidor atual" bool
 
 # Version flags
 add_flag "v" "version" "Show app version and exit" bool
@@ -246,6 +247,74 @@ function importar_backup () {
 
     echo "- Limpando pasta temporária..."
     rm -rf "$TMP_DIR"
+}
+
+
+function instalar_magnus () {
+
+    # TODO(@adrian): flag -y não é respeitada nisso.
+    if [[ -d /var/www/html/mbilling ]]; then
+        echo "⚠️  Parece que o MagnusBilling já está instalado nesse servidor."
+        read -rp "Tem certeza que quer continuar a instalação? ($(colorir "verde" "s")/$(colorir "vermelho" "n")) " resp
+
+        case "$resp" in
+            y|yes|s|S|sim|SIM )
+                echo "Prosseguindo com a instalação..."
+                ;;
+            n|N|nao|não|NAO|NÃO )
+                echo "Instalação cancelada."
+                return 1
+                ;;
+            * )
+                echo "Resposta inválida. Instalação cancelada."
+                return 1
+                ;;
+        esac
+    fi
+
+    local TMP_DIR
+    TMP_DIR=$(mktemp -d)
+
+    echo "- Criando diretório temporário: $TMP_DIR"
+    cd "$TMP_DIR" || { echo "Erro ao entrar em $TMP_DIR"; exit 1; }
+
+    echo "- Baixando instalador do MagnusBilling..."
+    wget -q https://raw.githubusercontent.com/magnussolution/magnusbilling7/source/script/install.sh
+
+    if [[ ! -f install.sh ]]; then
+        echo "ERRO: Falha ao baixar o arquivo install.sh"
+        cd /
+        rm -rf "$TMP_DIR"
+        exit 1
+    fi
+
+    echo "- Executando instalador..."
+    bash install.sh
+
+    echo "- Limpando pasta temporária..."
+    cd /
+    rm -rf "$TMP_DIR"
+
+    echo "✅ Instalação concluída!"
+}
+
+
+function post_magnus_install () {
+    local BASHRC="/root/.bashrc"
+
+    echo "- Ajustando /root/.bashrc para habilitar ls colorido..."
+
+    # Remove apenas o caractere '#' do início das linhas desejadas
+    sed -i \
+        -e "s|^[[:space:]]*#\s*export LS_OPTIONS='--color=auto'|export LS_OPTIONS='--color=auto'|" \
+        -e "s|^[[:space:]]*#\s*eval \"\$(dircolors)\"|eval \"\$(dircolors)\"|" \
+        -e "s|^[[:space:]]*#\s*alias ls='ls \$LS_OPTIONS'|alias ls='ls \$LS_OPTIONS'|" \
+        -e "s|^[[:space:]]*#\s*alias ll='ls \$LS_OPTIONS -l'|alias ll='ls \$LS_OPTIONS -l'|" \
+        -e "s|^[[:space:]]*#\s*alias l='ls \$LS_OPTIONS -lA'|alias l='ls \$LS_OPTIONS -lA'|" \
+        "$BASHRC"
+
+    echo "✅ Configurações de ls colorido ativadas!"
+    echo "✅ Post-install finalizado"
 }
 
 
