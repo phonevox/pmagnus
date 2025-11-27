@@ -223,7 +223,10 @@ function importar_backup () {
     fi
 
     echo "- Importando banco de dados..."
-    if ! mysql -u"$USER_DO_BANCO" -p"$SENHA_DO_BANCO" mbilling < "$DB_DUMP"; then
+    if ! mysql -u"$USER_DO_BANCO" -p"$SENHA_DO_BANCO" mbilling \
+        --init-command="SET FOREIGN_KEY_CHECKS=0; SET UNIQUE_CHECKS=0; SET AUTOCOMMIT=0;" \
+        < "$DB_DUMP"
+    then
         echo "$(colorir "vermelho" "ERRO: Falha ao importar o banco de dados. Verifique usuário, senha e conexão.")"
         rm -rf "$TMP_DIR"
         exit 1
