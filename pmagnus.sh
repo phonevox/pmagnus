@@ -291,31 +291,31 @@ function instalar_magnus () {
     echo "- Executando instalador..."
     bash install.sh
 
-    echo "- Limpando pasta temporária..."
-    cd /
-    rm -rf "$TMP_DIR"
+    # echo "- Limpando pasta temporária..."
+    # cd /
+    # rm -rf "$TMP_DIR"
 
-    echo "✅ Instalação concluída!"
+    # echo "✅ Instalação concluída!"
 }
 
 
-function post_magnus_install () {
-    local BASHRC="/root/.bashrc"
+# function post_magnus_install () {
+#     local BASHRC="/root/.bashrc"
 
-    echo "- Ajustando /root/.bashrc para habilitar ls colorido..."
+#     echo "- Ajustando /root/.bashrc para habilitar ls colorido..."
 
-    # Remove apenas o caractere '#' do início das linhas desejadas
-    sed -i \
-        -e "s|^[[:space:]]*#\s*export LS_OPTIONS='--color=auto'|export LS_OPTIONS='--color=auto'|" \
-        -e "s|^[[:space:]]*#\s*eval \"\$(dircolors)\"|eval \"\$(dircolors)\"|" \
-        -e "s|^[[:space:]]*#\s*alias ls='ls \$LS_OPTIONS'|alias ls='ls \$LS_OPTIONS'|" \
-        -e "s|^[[:space:]]*#\s*alias ll='ls \$LS_OPTIONS -l'|alias ll='ls \$LS_OPTIONS -l'|" \
-        -e "s|^[[:space:]]*#\s*alias l='ls \$LS_OPTIONS -lA'|alias l='ls \$LS_OPTIONS -lA'|" \
-        "$BASHRC"
+#     # Remove apenas o caractere '#' do início das linhas desejadas
+#     sed -i \
+#         -e "s|^[[:space:]]*#\s*export LS_OPTIONS='--color=auto'|export LS_OPTIONS='--color=auto'|" \
+#         -e "s|^[[:space:]]*#\s*eval \"\$(dircolors)\"|eval \"\$(dircolors)\"|" \
+#         -e "s|^[[:space:]]*#\s*alias ls='ls \$LS_OPTIONS'|alias ls='ls \$LS_OPTIONS'|" \
+#         -e "s|^[[:space:]]*#\s*alias ll='ls \$LS_OPTIONS -l'|alias ll='ls \$LS_OPTIONS -l'|" \
+#         -e "s|^[[:space:]]*#\s*alias l='ls \$LS_OPTIONS -lA'|alias l='ls \$LS_OPTIONS -lA'|" \
+#         "$BASHRC"
 
-    echo "✅ Configurações de ls colorido ativadas!"
-    echo "✅ Post-install finalizado"
-}
+#     echo "✅ Configurações de ls colorido ativadas!"
+#     echo "✅ Post-install finalizado"
+# }
 
 
 
