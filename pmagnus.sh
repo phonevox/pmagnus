@@ -247,6 +247,16 @@ function importar_backup () {
 
     echo "- Limpando pasta temporária..."
     rm -rf "$TMP_DIR"
+
+    echo "- Ajustando permissões da página web /mbilling..."
+    chmod -R 755 /var/www/html/mbilling
+
+    echo "- Atualizando senha do usuário mbillingUser no banco de dados..."
+    MBUSER_DBPASS=$(sed -n '/^\[general\]/,/^\[/ s/^dbpass[[:space:]]*=[[:space:]]*//p' /etc/asterisk/res_config_mysql.conf | head -n1)
+    mysql -u"$USER_DO_BANCO" -p"$SENHA_DO_BANCO" mbilling -e "ALTER USER 'mbillingUser'@'localhost' IDENTIFIED BY '$MBUSER_DBPASS'; FLUSH PRIVILEGES;"
+
+    echo "- Atualizando o sistema..."
+    bash /var/www/html/mbilling/protected/commands/update.sh
 }
 
 
