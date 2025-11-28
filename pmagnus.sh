@@ -332,6 +332,10 @@ function main () {
     if hasFlag "install"; then add_script_to_path; fi
     if hasFlag "update"; then check_for_updates "false"; fi
     if hasFlag "fu"; then check_for_updates "true"; fi # force
+    if hasFlag "mbinstall"; then 
+        instalar_magnus
+        exit 0
+    fi
 
     if hasFlag "b"; then 
         echo "> Gerando backup..."
